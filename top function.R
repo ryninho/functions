@@ -16,12 +16,3 @@ top <- function(v, n = length(unique(v)), desc = TRUE) {
   
   print(display)  
 }
-
-# older version:
-#
-# top <- function(v) {
-#   ## v is a vector; top(v) returns the frequency in %s
-#   
-#   sort(round(table(as.vector(v), useNA = "ifany")/length(v),2))
-#   
-# }
