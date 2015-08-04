@@ -1,0 +1,6 @@
+require(RPostgreSQL)
+require(httr)
+db <- Sys.getenv("READ_ONLY_DATABASE_URL")
+cred <- parse_url(db)
+con <- dbConnect(PostgreSQL(), host=cred$hostname,port=cred$port, user=ifelse(is.null(cred$username),"",cred$username),password=ifelse(is.null(cred$password),"",cred$password),dbname=cred$path)
+rm(db,cred)
