@@ -1,3 +1,5 @@
+-- thanks to http://tapoueh.org/blog/2014/02/21-PostgreSQL-histogram
+
 --TODO: create function histogram(query, binning_metric, min = min(binning_metric), max = max(binning_metric), buckets = 10, bar_height = 50)
 
 with deltas as (
