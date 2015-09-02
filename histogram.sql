@@ -2,26 +2,29 @@
 
 --TODO: create function histogram(query, binning_metric, min = min(binning_metric), max = max(binning_metric), buckets = 10, bar_height = 50)
 
+-- how soon are order issues reported?
+
 with deltas as (
 /*
 query goes in this CTE, replacing the next three lines- should have rows that are to be counted for bar heights and a bin-able metric
  */
-  SELECT extract(EPOCH from ratings.updated_at - order_deliveries.delivered_at)/(60*60*24) as days_rated_later
-  FROM ratings
-  INNER JOIN order_deliveries on order_deliveries.id = ratings.rateable_id
+  SELECT extract(EPOCH from first_issues.first_issue - order_deliveries.delivered_at)/(60*60) as hours_later
+  FROM (select order_delivery_id, min(created_at) as first_issue from order_issues GROUP BY 1) first_issues
+  INNER JOIN order_deliveries on order_deliveries.id = first_issues.order_delivery_id
+  WHERE order_deliveries.delivered_at > '2015-08-01'
 )
-, histogram as (select width_bucket(days_rated_later, 0, 7, 7) as bucket --replace days_rated_later with binning metric (1 replacement), also set min, max and # of buckets
-  , int4range(min(days_rated_later)::int, max(days_rated_later)::int, '[]') as range --replace days_rated_later with binning metric (2 replacements)
-  , count(*) as ratings  --name should be changed from ratings to what the rows represent
+, histogram as (select width_bucket(hours_later, 0, 72, 72) as bucket
+  , int4range(min(hours_later)::int, max(hours_later)::int, '[]') as range --replace hours_later with binning metric (2 replacements)
+  , count(*) as records  --name should be changed from ratings to what the rows represent
   , round(count(*) / sum(count(*)) over ()::numeric, 2) as pct
 from deltas
-  where days_rated_later >= 0 --replace days_rated_later with binning metric (1 replacement); also change threshold if needed
+  where hours_later >= 0 --replace hours_later with binning metric (1 replacement); also change threshold if needed
 GROUP BY 1
 ORDER BY 1)
 
 select bucket
   , range
-  , ratings  --name should be changed from ratings to what the rows represent
-  , repeat('*', (ratings::float / max(ratings) over() * 50)::int) as bar --name should be changed from ratings to what the rows represent (2 replacements); also change max bar height here if needed
+  , records  --name should be changed from ratings to what the rows represent
+  , repeat('*', (records::float / max(records) over() * 50)::int) as frequency --name should be changed from ratings to what the rows represent (2 replacements); also change max bar height here if needed
   , pct
 from histogram
