@@ -1,5 +1,7 @@
+# this is great for setting up a new server quickly for example
+
 options(repos=structure(c(CRAN="http://cran.cnr.Berkeley.edu")))
-#needed packages
+# needed packages
 for (pckg in c("forecast"
                , "sqldf"
                , "httr"
