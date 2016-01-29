@@ -1,6 +1,6 @@
 ##### see https://learnr.wordpress.com/2009/03/29/ggplot2_marimekko_mosaic_chart/
 ##### note that this works with the "opts" part commented out (opts is deprecated in ggplot2)
-
+##### another note: this file looks horrible in Github, try knitting it as an Rmd in Rstudio
 ---
 title: "Marimekko"
 author: "Eric, hastily copying and pasting from
