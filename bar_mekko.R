@@ -27,7 +27,7 @@ bm <- function(labels, width, height) {
   # Plotting
   
   p <- ggplot(df, aes(ymin = 0))
-  p1 <- p + geom_rect(aes(xmin = wm, xmax = w,ymax = height, fill = x))
+  p1 <- p + geom_rect(aes(xmin = wm, xmax = w,ymax = height, fill = as.factor(x)))
   
   # Add text labels
   
@@ -47,3 +47,4 @@ bm <- function(labels, width, height) {
 # h <- c(100,75, 50, 25)
 # 
 # bm(x, w, h)
+
